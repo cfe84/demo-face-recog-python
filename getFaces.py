@@ -1,14 +1,16 @@
 import face_recognition
 from PIL import Image, ImageDraw
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 # This is an example of running face recognition on a single image
 # and drawing a box around each person that was identified.
 
 def get_faces(inputPath, outputPath):
     # Load a sample picture and learn how to recognize it.
-    trudeau_image = face_recognition.load_image_file("trudeau.jpg")
+    trudeau_image = face_recognition.load_image_file(os.path.join(dir_path, "trudeau.jpg"))
     trudeau_face_encoding = face_recognition.face_encodings(trudeau_image)[0]
-    bieber_image = face_recognition.load_image_file("bieber.jpg")
+    bieber_image = face_recognition.load_image_file(os.path.join(dir_path, "bieber.jpg"))
     bieber_face_encoding = face_recognition.face_encodings(bieber_image)[0]
 
     # Create arrays of known face encodings and their names
@@ -47,12 +49,13 @@ def get_faces(inputPath, outputPath):
             name = known_face_names[first_match_index]
 
         # Draw a box around the face using the Pillow module
-        draw.rectangle(((left, top), (right, bottom)), outline=(0, 0, 255))
+        draw.rectangle(((left, top), (right, bottom)), outline=(255, 0, 0))
 
         # Draw a label with a name below the face
         text_width, text_height = draw.textsize(name)
-        draw.rectangle(((left, bottom - text_height - 10), (right, bottom)), fill=(0, 0, 255), outline=(0, 0, 255))
-        draw.text((left + 6, bottom - text_height - 5), name, fill=(255, 255, 255, 255))
+        if name != "Unknown" :
+            draw.rectangle(((left, bottom - text_height - 10), (right, bottom)), fill=(0, 0, 255), outline=(0, 0, 255))
+            draw.text((left + 6, bottom - text_height - 5), name, fill=(255, 255, 255, 255))
 
 
     # Remove the drawing library from memory as per the Pillow docs
